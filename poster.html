@@ -5,20 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Airline Satisfaction</title>
 <style>
-:root { --ink:#1c1915; --muted:#5c564c; --line:#d9d1c3; --paper:#f6f1e7; --card:#fffdf8; --accent:#8C3A2F; }
+
+:root { --ink:#1c1915; --muted:#5c564c; --line:#d9d1c3; --paper:#f6f1e7; --card:#fffdf8; --accent:#9A3412; }
 * { box-sizing:border-box; }
 body { margin:0; background:#e7e1d6; color:var(--ink); font-family:Georgia, "Iowan Old Style", serif; }
 .sheet { max-width:1180px; margin:28px auto; background:var(--paper); border:1px solid var(--line); }
-.band { display:grid; grid-template-columns:1.25fr 1fr 0.9fr; border-top:1px solid var(--line); }
-.band section { padding-bottom:18px; }
-header { display:flex; justify-content:space-between; gap:24px; padding:28px 32px 18px; border-bottom:3px solid var(--accent); }
+header { display:flex; justify-content:space-between; gap:24px; padding:26px 32px 16px; border-bottom:3px solid var(--accent); }
 h1 { font-size:34px; line-height:1.05; margin:0 0 8px; letter-spacing:-0.4px; }
-.claim { margin:0; font-family:"Segoe UI", sans-serif; font-size:16px; color:var(--muted); max-width:680px; }
+.claim { margin:0; font-family:"Segoe UI", sans-serif; font-size:16px; color:var(--muted); max-width:720px; }
 .kicker { font-family:"Segoe UI", sans-serif; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin:0 0 8px; }
 .tags { font-family:"Segoe UI", sans-serif; font-size:12px; text-align:right; color:var(--muted); }
 .tags span { display:inline-block; border:1px solid var(--line); padding:4px 8px; margin:0 0 6px 6px; background:var(--card); }
-.grid { display:grid; grid-template-columns:1.1fr 1fr 0.9fr; }
-section { padding:22px 24px 8px; border-right:1px solid var(--line); }
+.path { display:grid; grid-template-columns:repeat(4,1fr); list-style:none; margin:0; padding:0; border-bottom:1px solid var(--line); }
+.path li { padding:12px 16px 14px; border-right:1px solid var(--line); }
+.path li:last-child { border-right:0; }
+.path b { display:block; font-family:"Segoe UI", sans-serif; font-size:11px; letter-spacing:0.12em; color:var(--accent); margin-bottom:4px; }
+.path span { font-family:"Segoe UI", sans-serif; font-size:13.5px; line-height:1.35; }
+.grid, .band { display:grid; grid-template-columns:1.15fr 1fr 0.9fr; }
+.band { border-top:1px solid var(--line); }
+section { padding:18px 22px 8px; border-right:1px solid var(--line); }
 section:last-child { border-right:0; }
 h2 { font-family:"Segoe UI", sans-serif; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; margin:0 0 10px; color:var(--accent); }
 p, li { font-family:"Segoe UI", sans-serif; font-size:14.5px; line-height:1.45; }
@@ -26,35 +31,88 @@ ul { margin:0; padding-left:18px; }
 .stat { border-top:1px solid var(--line); padding:10px 0; }
 .stat b { display:block; font-size:26px; font-family:Georgia, serif; }
 .stat span { font-family:"Segoe UI", sans-serif; font-size:12px; color:var(--muted); }
-footer { display:flex; justify-content:space-between; gap:20px; padding:16px 32px 22px; border-top:1px solid var(--line); font-family:"Segoe UI", sans-serif; font-size:14px; }
+.out { font-family:Consolas, monospace; font-size:12.5px; line-height:1.55; background:var(--card); border:1px solid var(--line); padding:10px 12px; margin:0 0 8px; white-space:pre-wrap; }
+.shots { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; padding:8px 22px 18px; border-top:1px solid var(--line); }
+.shots.one { grid-template-columns:1fr; }
+.shots.two { grid-template-columns:1.15fr 1fr; }
+.shots figure { margin:0; background:var(--card); border:1px solid var(--line); }
+.shots img { width:100%; height:190px; object-fit:contain; background:#fff; display:block; }
+.shots.one img { height:280px; }
+.shots figcaption { font-family:"Segoe UI", sans-serif; font-size:12px; color:var(--muted); padding:6px 8px 8px; }
+.next { margin:0; padding:12px 28px 16px; border-top:1px solid var(--line); font-family:"Segoe UI", sans-serif; font-size:13.5px; color:var(--muted); line-height:1.45; }
+.next b { color:var(--ink); font-weight:600; }
+footer { display:flex; justify-content:space-between; gap:20px; padding:16px 28px 22px; border-top:1px solid var(--line); font-family:"Segoe UI", sans-serif; font-size:14px; }
 code { font-family:Consolas, monospace; background:var(--card); border:1px solid var(--line); padding:2px 6px; }
-@media (max-width:800px) { .grid, .band { grid-template-columns:1fr; } section { border-right:0; border-bottom:1px solid var(--line); } header, footer { display:block; } .tags { text-align:left; margin-top:12px; } }
+@media (max-width:800px) {
+  .grid, .band, .path, .shots, .shots.two { grid-template-columns:1fr; }
+  section { border-right:0; border-bottom:1px solid var(--line); }
+  header, footer { display:block; }
+  .tags { text-align:left; margin-top:12px; }
+}
+
 </style>
 </head>
 <body>
 <article class="sheet">
+
   <header>
     <div>
       <p class="kicker">Analysis</p>
       <h1>Airline Satisfaction</h1>
-      <p class="claim">A passenger is not a single score. Delay, cabin, and loyalty interact, and a careful feature pass beats a bigger model.</p>
+      <p class="claim">A passenger is a mix of cabin, purpose, and the online steps before the flight. Cleaning that mix mattered more than picking a bigger model.</p>
     </div>
     <div class="tags"><span>103,904 flights</span><span>XGBoost</span><span>SHAP</span></div>
   </header>
+  <ol class="path">
+    <li><b>01 · Look</b><span>Survey of 103,904 flights. Delays are missing, ratings pile up at zero, and 18 features share the same information.</span></li>
+    <li><b>02 · Repair</b><span>Arrival delay is filled from departure delay. The survey block is folded into a few comfort scores so the columns stop repeating each other.</span></li>
+    <li><b>03 · Fit</b><span>The same 23 features go to logistic regression, a random forest, and XGBoost.</span></li>
+    <li><b>04 · Explain</b><span>SHAP on the winner, so the score has a reason a person can read.</span></li>
+  </ol>
   <div class="grid">
-    <section><h2>Question</h2><ul><li>Which parts of the trip actually move a passenger from neutral to satisfied?</li><li>The raw survey has missing delays, zero-inflated ratings, and 18 features with VIF above 5.</li></ul></section>
-    <section><h2>Method</h2><ul><li>Arrival delay imputed from departure delay (R² 0.93), not a mean fill.</li><li>Survey block reduced with PCA into cabin comfort, digital experience, and staff service.</li><li>23 features selected, then logistic regression, random forest, and XGBoost.</li></ul></section>
-    <section><h2>Evidence</h2><div class="stat"><b>0.987</b><span>ROC-AUC, XGBoost</span></div><div class="stat"><b>0.935</b><span>F1 on the held-out test</span></div><div class="stat"><b>0</b><span>features left above VIF 5</span></div></section>
+    <section><h2>Question</h2><ul>
+      <li>Which parts of the trip actually move someone from neutral to satisfied?</li>
+      <li>Class looks ordered, but Eco Plus does not sit neatly between Eco and Business, so it stays a category.</li>
+    </ul></section>
+    <section><h2>Why this path</h2><ul>
+      <li>Mean-filling the delay would invent a typical flight. Predicting arrival from departure keeps the delay that really happened (R² 0.93).</li>
+      <li>Once the repeated survey items are combined, a simple model and a boosted one can be compared fairly.</li>
+    </ul></section>
+    <section><h2>What held</h2>
+      <div class="stat"><b>0.987</b><span>ROC-AUC, XGBoost on the held-out flights</span></div>
+      <div class="stat"><b>0.935</b><span>F1 on that same test split</span></div>
+      <div class="stat"><b>72% vs 12%</b><span>satisfied in business class, business trip vs personal trip</span></div>
+    </section>
   </div>
   <div class="band">
-    <section><h2>What the result actually says</h2><ul><li>Business class is satisfied 69.4% of the time, Eco 18.6%, Eco Plus 24.6%. Eco Plus sits between them in price and not in satisfaction, so Class is one-hot, not an ordered number.</li><li>Business travel in business class is 72% satisfied. The same cabin on a personal trip is 12.2%. The interaction is the feature, not the cabin alone.</li><li>99.14% of disloyal customers are business travelers. Retention here is a corporate-account problem.</li><li>SHAP puts online boarding and type of travel at the front of the explanation. The notebook still has those plots saved.</li></ul></section>
-    <section><h2>What it does not show</h2><ul><li>This is one airline survey, not a causal claim that changing boarding would lift satisfaction by the SHAP amount.</li><li>The held-out score is high because the survey answers are already close to the label. It is a strong model of this form, not a forecast of next quarter.</li></ul></section>
-    <section><h2>Beside the other attempts</h2><ul><li>Logistic regression, random forest, and XGBoost on the same 23 features. XGBoost is the one reported: ROC-AUC 0.987, F1 0.935.</li><li>Eighteen features started above VIF 5. After the survey block went through PCA, none did.</li><li>Arrival delay was imputed from departure delay at R² 0.93, instead of filling the column with the mean.</li></ul></section>
+    <section><h2>Reading the result</h2><ul>
+      <li>Business class is satisfied 69% of the time, Eco 19%, Eco Plus 25%. The cabin matters, and the reason for flying matters more: the same seat on a personal trip collapses.</li>
+      <li>Almost all disloyal customers are business travelers, so retention here is a corporate-account question.</li>
+      <li>Online boarding and type of travel lead the explanation. The high score fits this survey, where the answers already sit close to the label.</li>
+    </ul></section>
+    <section><h2>A real output</h2>
+      <div class="out">Business + business travel   72% satisfied
+Business + personal trip    12% satisfied
+Eco                         19% satisfied
+XGBoost test F1             0.935</div>
+      <p>Plots below are the ones saved from the notebook.</p>
+    </section>
+    <section><h2>How the models compared</h2><ul>
+      <li>Three models, one feature set. XGBoost is the one reported. The others were close enough that the feature work is the real gain.</li>
+      <li>Eighteen features started above VIF 5. After the survey block went through PCA, none did.</li>
+    </ul></section>
   </div>
+  <div class="shots">
+    <figure><img src="shap_beeswarm.png" alt="SHAP beeswarm"><figcaption>Online boarding and type of travel move the score the most.</figcaption></figure>
+    <figure><img src="distributions_numerical.png" alt="Numeric distributions"><figcaption>Delays and ratings before the repair. Zero ratings and long delays are the shape of the table.</figcaption></figure>
+    <figure><img src="pca_scree.png" alt="PCA scree"><figcaption>How many survey components were worth keeping.</figcaption></figure>
+  </div>
+  <p class="next"><b>Scope.</b> One airline’s form, not a forecast of next quarter, and not a claim that changing boarding would lift satisfaction by the SHAP amount.</p>
   <footer>
-    <div><h2>Stack</h2><p>Pandas, scikit-learn, XGBoost, SHAP. Train 103,904 rows, test 25,976. Satisfied passengers are 43.3% of the train set.</p></div>
-    <div><h2>Look at it</h2><p>Open <code>airline_satisfaction_analysis.ipynb</code>. The saved outputs are already in the file.</p></div>
+    <div><h2>Stack</h2><p>Pandas, scikit-learn, XGBoost, SHAP. Train 103,904 rows, test 25,976. Satisfied passengers are 43% of the train set.</p></div>
+    <div><h2>Look at it</h2><p>Open <code>airline_satisfaction_analysis.ipynb</code>. The figures are already saved.</p></div>
   </footer>
+
 </article>
 </body>
 </html>

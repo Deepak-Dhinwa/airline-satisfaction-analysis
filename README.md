@@ -1,5 +1,9 @@
 # Airline Satisfaction Analysis
+
+One-page summary: open `poster.html` in a browser.
 ### Data-Centric ML Pipeline: Feature Engineering, Multicollinearity Handling & Ensemble Modeling
+
+`train.csv` and `test.csv` are already in this folder. Open `airline_satisfaction_analysis.ipynb`. The notebook still has its saved outputs, so it can be read without retraining.
 
 ---
 
